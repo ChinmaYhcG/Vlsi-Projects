@@ -1,0 +1,48 @@
+$date
+	Tue May 26 05:13:54 2026
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module NAND_cmos_tb $end
+$var wire 1 ! y $end
+$var reg 1 " a $end
+$var reg 1 # b $end
+$scope module uut $end
+$var wire 1 " a $end
+$var wire 1 # b $end
+$var wire 1 $ gnd $end
+$var wire 1 % mid $end
+$var wire 1 & vdd $end
+$var wire 1 ! y $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+1&
+z%
+0$
+0#
+0"
+1!
+$end
+#10
+0%
+1#
+#20
+z%
+0#
+1!
+1"
+#30
+0!
+0%
+1#
+#40

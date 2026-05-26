@@ -1,0 +1,65 @@
+#! /usr/bin/vvp
+:ivl_version "12.0 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/system.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/vhdl_sys.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/vhdl_textio.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/v2005_math.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/va_math.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/v2009.vpi";
+S_0x55d282dff4d0 .scope package, "$unit" "$unit" 2 1;
+ .timescale 0 0;
+S_0x55d282e12920 .scope module, "AND_gate_tb" "AND_gate_tb" 3 1;
+ .timescale 0 0;
+v0x55d282e26070_0 .var "a", 0 0;
+v0x55d282e26140_0 .var "b", 0 0;
+v0x55d282e26210_0 .net "out", 0 0, L_0x55d282e26310;  1 drivers
+S_0x55d282e12ab0 .scope module, "uut" "AND_gate" 3 5, 4 1 0, S_0x55d282e12920;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "a";
+    .port_info 1 /INPUT 1 "b";
+    .port_info 2 /OUTPUT 1 "out";
+L_0x55d282e26310 .functor AND 1, v0x55d282e26070_0, v0x55d282e26140_0, C4<1>, C4<1>;
+v0x55d282dd9500_0 .net "a", 0 0, v0x55d282e26070_0;  1 drivers
+v0x55d282e25e90_0 .net "b", 0 0, v0x55d282e26140_0;  1 drivers
+v0x55d282e25f50_0 .net "out", 0 0, L_0x55d282e26310;  alias, 1 drivers
+    .scope S_0x55d282e12920;
+T_0 ;
+    %vpi_call/w 3 8 "$dumpfile", "AND_wave.vcd" {0 0 0};
+    %vpi_call/w 3 9 "$dumpvars", 32'sb00000000000000000000000000000000, S_0x55d282e12920 {0 0 0};
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x55d282e26070_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x55d282e26140_0, 0, 1;
+    %delay 10, 0;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x55d282e26070_0, 0, 1;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x55d282e26140_0, 0, 1;
+    %delay 10, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x55d282e26070_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x55d282e26140_0, 0, 1;
+    %delay 10, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x55d282e26070_0, 0, 1;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x55d282e26140_0, 0, 1;
+    %delay 10, 0;
+    %vpi_call/w 3 16 "$finish" {0 0 0};
+    %end;
+    .thread T_0;
+    .scope S_0x55d282e12920;
+T_1 ;
+    %vpi_call/w 3 20 "$monitor", "t=%0t | a=%b b=%b | out=%b", $time, v0x55d282e26070_0, v0x55d282e26140_0, v0x55d282e26210_0 {0 0 0};
+    %end;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 5;
+    "N/A";
+    "<interactive>";
+    "-";
+    "AND_gate_tb.v";
+    "AND_gate.v";

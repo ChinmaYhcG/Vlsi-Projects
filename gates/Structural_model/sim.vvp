@@ -1,0 +1,65 @@
+#! /usr/bin/vvp
+:ivl_version "12.0 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/system.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/vhdl_sys.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/vhdl_textio.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/v2005_math.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/va_math.vpi";
+:vpi_module "/usr/lib/x86_64-linux-gnu/ivl/v2009.vpi";
+S_0x622e55dc0a20 .scope package, "$unit" "$unit" 2 1;
+ .timescale 0 0;
+S_0x622e55dc0bb0 .scope module, "XNOR_gate_str_tb" "XNOR_gate_str_tb" 3 1;
+ .timescale 0 0;
+v0x622e55dd4020_0 .var "a", 0 0;
+v0x622e55dd40f0_0 .var "b", 0 0;
+v0x622e55dd41c0_0 .net "y", 0 0, L_0x622e55dd42c0;  1 drivers
+S_0x622e55d87500 .scope module, "uut" "XNOR_gate_str" 3 4, 4 1 0, S_0x622e55dc0bb0;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "a";
+    .port_info 1 /INPUT 1 "b";
+    .port_info 2 /OUTPUT 1 "y";
+L_0x622e55dd42c0 .functor XNOR 1, v0x622e55dd4020_0, v0x622e55dd40f0_0, C4<0>, C4<0>;
+v0x622e55d87730_0 .net "a", 0 0, v0x622e55dd4020_0;  1 drivers
+v0x622e55dd3e40_0 .net "b", 0 0, v0x622e55dd40f0_0;  1 drivers
+v0x622e55dd3f00_0 .net "y", 0 0, L_0x622e55dd42c0;  alias, 1 drivers
+    .scope S_0x622e55dc0bb0;
+T_0 ;
+    %vpi_call/w 3 6 "$dumpfile", "XNOR_str_wave.vcd" {0 0 0};
+    %vpi_call/w 3 7 "$dumpvars", 32'sb00000000000000000000000000000000, S_0x622e55dc0bb0 {0 0 0};
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x622e55dd4020_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x622e55dd40f0_0, 0, 1;
+    %delay 10, 0;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x622e55dd4020_0, 0, 1;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x622e55dd40f0_0, 0, 1;
+    %delay 10, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x622e55dd4020_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x622e55dd40f0_0, 0, 1;
+    %delay 10, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x622e55dd4020_0, 0, 1;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x622e55dd40f0_0, 0, 1;
+    %delay 10, 0;
+    %vpi_call/w 3 12 "$finish" {0 0 0};
+    %end;
+    .thread T_0;
+    .scope S_0x622e55dc0bb0;
+T_1 ;
+    %vpi_call/w 3 15 "$monitor", "t=%0t | a=%b b=%b | y=%b", $time, v0x622e55dd4020_0, v0x622e55dd40f0_0, v0x622e55dd41c0_0 {0 0 0};
+    %end;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 5;
+    "N/A";
+    "<interactive>";
+    "-";
+    "XNOR_gate_str_tb.v";
+    "XNOR_gate_str.v";
