@@ -36,4 +36,5 @@ module moore_fsm_tb;
  end
  initial begin 
  $monitor("Time=%0t | rst_n=%b | go=%b | ws=%b || OUTPUTS: rd=%b |ds=%b",$time, rst_n, go, ws, rd, ds);
- end endmodule
+ end 
+ endmodule

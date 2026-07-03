@@ -1,4 +1,4 @@
-module AND_gate_str(a, b, y);
+module AND_gate_stur(a, b, y);
     input a, b;
     output y;
     and g1(y, a, b);
