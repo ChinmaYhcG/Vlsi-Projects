@@ -6,7 +6,7 @@ Verilog implementation of a UART transmitter, built and verified module-by-modul
 
 | Module | Status |
 |---|---|
-| Baud rate generator | Complete, self-checking testbench passing (both TX and RX enable paths verified, including forced mid-count `rx_reset` realignment) |
+| Baud rate generator | Complete, self-checking testbench passing (both TX and RX enable paths verified) |
 | Transmitter (TX FSM) | Complete, self-checking testbench passing across 4 test bytes (`0xA5`, `0x3C`, `0x00`, `0xFF`) |
 | Integration test (baud generator + transmitter) | Passing, 0 errors across all test bytes |
 | Receiver (RX FSM) | Not started |
