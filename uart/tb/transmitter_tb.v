@@ -13,8 +13,6 @@ module top_integration_tb;
     
     baud_rate_generator baud_gen (
         .clk(clk),
-        .rst_n(rst_n),
-        .rx_reset(1'b0),
         .tx_enb(tx_enb),
         .rx_enb(rx_enb)
     );
@@ -22,7 +20,6 @@ module top_integration_tb;
     transmitter tx_mod (
         .clk(clk),
         .wr_enb(wr_enb),
-        .rst_n(rst_n),
         .tx_enb(tx_enb),
         .data_in(data_in),
         .tx(tx),
