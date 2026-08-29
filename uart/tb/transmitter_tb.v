@@ -12,12 +12,14 @@ module top_integration_tb;
     wire busy;
     
     baud_rate_generator baud_gen (
+        .rst_n(rst_n),
         .clk(clk),
         .tx_enb(tx_enb),
         .rx_enb(rx_enb)
     );
     
     transmitter tx_mod (
+        .rst_n(rst_n),
         .clk(clk),
         .wr_enb(wr_enb),
         .tx_enb(tx_enb),
