@@ -3,3 +3,4 @@
 *.vcd
 sim_tx
 *.vcd
+sim_*
