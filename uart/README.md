@@ -8,7 +8,7 @@ Verilog implementation of a UART transmitter and receiver, built and verified mo
 |---|---|
 | Baud rate generator | Complete, self-checking testbench passing (both TX and RX enable paths verified, including forced mid-count `rx_reset` realignment) |
 | Transmitter (TX FSM) | Complete, self-checking testbench passing across 4 test bytes (`0xA5`, `0x3C`, `0x00`, `0xFF`) |
-| Receiver (RX FSM) | Complete, self-checking loopback testbench passing across 5 test bytes (`0xA5`, `0x3C`, `0x00`, `0xFF`, `0x55`) |
+| Receiver (RX FSM) | Complete, self-checking loopback testbench passing across 5 test bytes (`0xA5`, `0x3C`, `0x00`, `0xFF`, `0x55`), plus separate `frame_err` and zero-gap back-to-back framing coverage |
 | Integration test (baud generator + transmitter) | Passing, 0 errors across all test bytes |
 | Integration test (baud generator + transmitter + receiver, loopback) | Passing, 0 errors across all test bytes |
 
@@ -20,6 +20,9 @@ src/
   transmitter.v     - UART TX FSM (idle -> start -> data -> stop), tx_enb-gated
   receiver.v        - UART RX FSM, 16x oversampled, recovers bit timing from an
                        external line with no shared clock enable
+uart_top.v          - top-level wrapper instantiating all three modules for
+                       synthesis (not used in simulation, which instantiates
+                       each module directly in its own testbench)
 tb/
   baud_rate_gen_tb.v - self-checking baud generator testbench
   transmitter_tb.v   - top_integration_tb: instantiates baud_rate_gen + transmitter,
@@ -27,6 +30,12 @@ tb/
   receiver_tb.v      - instantiates baud_rate_gen + transmitter + receiver in loopback
                         (transmitter's tx line feeds receiver's rx line directly),
                         self-checks received byte against what was sent
+  receiver_edge_tb.v      - drives rx directly (bypassing the transmitter) to test
+                             frame_err: valid frame (no false positive) and a
+                             deliberately corrupted stop bit (must assert)
+  receiver_backtoback_tb.v - 5 bytes through the real transmitter with zero idle
+                              gap between frames, confirming no state carries over
+                              incorrectly between back-to-back transmissions
 ```
 
 ## Design notes
@@ -35,7 +44,9 @@ tb/
 - **Baud generator is shared, not duplicated:** `transmitter` and `receiver` both take enable signals from the same `baud_rate_gen` instance rather than each building a private timing reference, so TX and RX stay on the same clock enable instead of drifting independently.
 - **Receiver timing recovery:** unlike the transmitter, `receiver` has no shared enable signal with the line it's reading — it detects the incoming start edge, drives `rx_reset` back into the baud generator to realign the RX sample counter, then qualifies the start bit at the half-bit mark (protects against short glitches) before sampling every subsequent bit at the full-bit mark, 16x-oversampled.
 - **Metastability handling:** `rx` is an external, asynchronous signal, so `receiver` runs it through a 2-flop synchronizer before use, plus a third register purely for edge detection (comparing synchronized-now vs synchronized-previous).
-- **Known limitation:** the start bit is currently qualified with a single sample at its midpoint, not a majority vote across multiple samples. This is the standard approach for rejecting a genuine timing offset but does not protect against a noise spike that happens to persist through that one sample instant. Not exercised by the current loopback testbench, since a simulated wire has no noise.
+- **`frame_err` coverage:** verified directly (not just present in the code) — `receiver_edge_tb.v` drives `rx` independently of the transmitter to confirm `frame_err` stays low on a valid frame and correctly asserts on a deliberately corrupted stop bit.
+- **Back-to-back framing:** `receiver_backtoback_tb.v` sends 5 bytes through the real transmitter with zero idle gap between transmissions (next byte starts the instant `busy` drops) and confirms all 5 are received correctly — the original loopback testbench always left an idle gap between bytes, so this was previously untested.
+- **Known limitation:** the start bit is currently qualified with a single sample at its midpoint, not a majority vote across multiple samples. This is the standard approach for rejecting a genuine timing offset but does not protect against a noise spike that happens to persist through that one sample instant. Not exercised by any current testbench, since a simulated wire has no noise.
 - **All correctness claims here are backed by console `$display` PASS/FAIL output**, not waveform inspection alone. Waveforms are used for debugging, not as evidence of correctness.
 
 ## Simulate
@@ -51,7 +62,17 @@ vvp transmitter_sim
 
 iverilog -g2012 -o receiver_sim tb/receiver_tb.v src/receiver.v src/transmitter.v src/baud_rate_gen.v
 vvp receiver_sim
+
+iverilog -g2012 -o edge_sim src/baud_rate_gen.v src/receiver.v tb/receiver_edge_tb.v
+vvp edge_sim
+
+iverilog -g2012 -o back2back_sim src/baud_rate_gen.v src/transmitter.v src/receiver.v tb/receiver_backtoback_tb.v
+vvp back2back_sim
 ```
+
+## Synthesis
+
+`uart_top.v` wraps all three modules (baud generator + transmitter + receiver) into a single top-level module and synthesizes cleanly in Vivado 2025.2 targeting a Kintex-7 (`xc7k70tfbv676-1`) — 26 leaf cells, no critical warnings on the design itself (one benign incremental-synthesis-checkpoint warning, unrelated to the RTL). Synthesis only confirms the design maps to real FPGA primitives; it has not been through implementation (place & route) or tested on physical hardware.
 
 ## Next steps
 
